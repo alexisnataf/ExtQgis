@@ -37,6 +37,7 @@ FORM_CLASS, _ = uic.loadUiType(
 
 
 class ExtensionAlexisDialog(QtWidgets.QDialog, FORM_CLASS):
+    
     def __init__(self, parent=None):
         """Constructor."""
         super(ExtensionAlexisDialog, self).__init__(parent)
