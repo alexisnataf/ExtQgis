@@ -48,6 +48,12 @@
      <height>19</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
     <string>Listes des couches</string>
    </property>
@@ -60,6 +66,11 @@
      <width>81</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <underline>false</underline>
+    </font>
    </property>
    <property name="text">
     <string>Point cliqué</string>
@@ -74,6 +85,12 @@
      <height>19</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
     <string>Longitude</string>
    </property>
@@ -87,8 +104,52 @@
      <height>19</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
     <string>Latitude</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="longitude">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>140</y>
+     <width>121</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="latitude">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>160</y>
+     <width>131</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <italic>true</italic>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
