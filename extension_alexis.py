@@ -22,7 +22,7 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QLocale, QTranslator, QCoreApplication
-from qgis.core import QgsSettings
+from qgis.core import QgsSettings, QgsProject
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
@@ -187,6 +187,14 @@ class ExtensionAlexis:
         if self.first_start == True:
             self.first_start = False
             self.dlg = ExtensionAlexisDialog()
+
+        self.dlg.listeDesLayers.clear()
+        project = QgsProject.instance()
+
+        layers = project.mapLayers().values()
+
+        for layer in layers:
+            self.dlg.listeDesLayers.addItem(layer.name())
 
         # show the dialog
         self.dlg.show()
