@@ -22,9 +22,10 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QLocale, QTranslator, QCoreApplication
-from qgis.core import QgsSettings, QgsProject
+from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes, QgsCoordinateReferenceSystem, QgsCoordinateTransform
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
+from qgis.gui import QgsMapToolEmitPoint
 
 # Import the code for the dialog
 from .extension_alexis_dialog import ExtensionAlexisDialog
@@ -186,7 +187,7 @@ class ExtensionAlexis:
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
             self.first_start = False
-            self.dlg = ExtensionAlexisDialog()
+            self.dlg = ExtensionAlexisDialog(self.iface.mainWindow())
 
         self.dlg.listeDesLayers.clear()
         project = QgsProject.instance()
@@ -194,14 +195,39 @@ class ExtensionAlexis:
         layers = project.mapLayers().values()
 
         for layer in layers:
-            self.dlg.listeDesLayers.addItem(layer.name())
+            #QgsMessageLog.logMessage(str(layer.type()), "TP", level=0)
+            if layer.type() == 0 and layer.wkbType() == QgsWkbTypes.Point:
+                self.dlg.listeDesLayers.addItem(layer.name())
+
+        #le canva cartographique de QGIS
+
+        self.canvas = self.iface.mapCanvas()
+        self.pointTool = QgsMapToolEmitPoint(self.canvas)
+        self.pointTool.canvasClicked.connect(self.displayPoint)
+        self.canvas.setMapTool(self.pointTool)
 
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        #result = self.dlg.exec_()
         # See if OK was pressed
-        if result:
+        #if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+         #   pass
+
+    def displayPoint(self, coord, button):
+        coord_depart = self.canvas.mapSettings().destinationCrs()
+        if coord_depart.authid() != "EPSG:4326":
+            coord_fin = QgsCoordinateReferenceSystem("EPSG:4326")
+
+        coord = QgsCoordinateTransform(coord_depart, coord_fin, QgsProject.instance()).transform(coord)
+
+        x = str(coord.x())
+        y = str(coord.y())
+        index_special = texte.find(".")
+        resX = x[: index_special + 1 + 5]
+        resY = y[: index_special + 1 + 5]
+        self.dlg.longitude.setText(resX)
+        self.dlg.latitude.setText(resY)    
+
