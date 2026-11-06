@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>398</width>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>240</y>
+     <x>40</x>
+     <y>340</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -55,7 +55,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Listes des couches</string>
+    <string>Liste des couches</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -70,6 +70,8 @@
    <property name="font">
     <font>
      <pointsize>13</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
      <underline>false</underline>
     </font>
    </property>
@@ -177,8 +179,8 @@
     <rect>
      <x>100</x>
      <y>180</y>
-     <width>261</width>
-     <height>51</height>
+     <width>301</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -186,6 +188,106 @@
    </property>
    <property name="wordWrap">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>230</y>
+     <width>131</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Nombre d'objets : </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>260</y>
+     <width>31</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Il y a </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="objets">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>260</y>
+     <width>61</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>260</y>
+     <width>131</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>objet(s) à moins de</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="metres">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>260</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>260</y>
+     <width>51</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>mètres</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>280</y>
+     <width>111</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>du point cliqué</string>
    </property>
   </widget>
  </widget>
