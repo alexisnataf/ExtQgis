@@ -26,6 +26,7 @@ from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes,
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 from qgis.gui import QgsMapToolEmitPoint
+import requests
 
 # Import the code for the dialog
 from .extension_alexis_dialog import ExtensionAlexisDialog
@@ -225,9 +226,26 @@ class ExtensionAlexis:
 
         x = str(coord.x())
         y = str(coord.y())
-        index_special = texte.find(".")
-        resX = x[: index_special + 1 + 5]
-        resY = y[: index_special + 1 + 5]
+        index_special1 = x.find(".")
+        index_special2 = y.find(".")
+        resX = x[: index_special1 + 1 + 5]
+        resY = y[: index_special2 + 1 + 5]
         self.dlg.longitude.setText(resX)
         self.dlg.latitude.setText(resY)    
 
+        if resX != None and resY != None:
+            url = f"https://data.geopf.fr/geocodage/reverse?lat={resY}&lon={resX}"
+            reponse = requests.get(url)
+            if reponse.status_code == 200:
+                donnees = reponse.json()
+                #QgsMessageLog.logMessage(donnees, "TP", level=0)
+                try: 
+                    adresse_from_lonlat_name = donnees["features"][0]["properties"]["name"]
+                    adresse_from_lonlat_citycode = donnees["features"][0]["properties"]["citycode"]
+                    adresse_from_lonlat_city = donnees["features"][0]["properties"]["city"]
+                    adresse_from_lonlat = f"{adresse_from_lonlat_name} {adresse_from_lonlat_citycode} {adresse_from_lonlat_city}"
+                    self.dlg.adresse.setText(adresse_from_lonlat)
+                except (KeyError, IndexError):
+                    self.dlg.adresse.setText("adresse introuvable")    
+            else:
+                self.dlg.adresse.setText("introuvable")
