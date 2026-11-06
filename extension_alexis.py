@@ -22,7 +22,7 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QLocale, QTranslator, QCoreApplication
-from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes, QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsGeometry, QgsCoordinateTransform, QgsPointXY
+from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes, QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsGeometry, QgsCoordinateTransform, QgsPointXY, QgsFillSymbol, QgsSingleSymbolRenderer, QgsVectorLayer, QgsFeature
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 from qgis.gui import QgsMapToolEmitPoint
@@ -220,6 +220,7 @@ class ExtensionAlexis:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
          #   pass
+    
 
     def displayPoint(self, coord, button):
         coord_depart = self.canvas.mapSettings().destinationCrs()
@@ -287,3 +288,32 @@ class ExtensionAlexis:
             if buffer.intersects(mageom):
                 compteur += 1
         self.dlg.objets.setText(str(compteur))        
+
+        tempo_layers = QgsProject.instance().mapLayersByName("buffer cercle")
+        if len(tempo_layers) == 0:
+            tempo_Layer = QgsVectorLayer("polygon?crs=epsg:2154", "buffer cercle",  "memory")
+            symbole = QgsFillSymbol.createSimple({
+    #            'color': '0,0,0,255',
+                'style': 'no',
+                'outline_color': '0,0,0,255',    
+                'outline_width': '0.4',          
+                'outline_style': 'solid'                
+            })
+            renderer = QgsSingleSymbolRenderer(symbole)
+            tempo_Layer.setRenderer(renderer)
+            QgsProject.instance().addMapLayer(tempo_Layer)
+        else:
+            tempo_Layer = tempo_layers[0]
+
+        #tempo_Layer.startEditing()
+
+        #pour enlever les buffers precedents
+        tempo_Layer.dataProvider().truncate()
+
+        feature_buffer = QgsFeature()
+        feature_buffer.setGeometry(buffer)
+        tempo_Layer.dataProvider().addFeatures([feature_buffer])
+        tempo_Layer.dataProvider().updateExtents()
+        tempo_Layer.triggerRepaint()
+        #self.iface.mapCanvas().refresh()
+        
