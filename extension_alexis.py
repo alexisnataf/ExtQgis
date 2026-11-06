@@ -22,10 +22,11 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QLocale, QTranslator, QCoreApplication
-from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes, QgsCoordinateReferenceSystem, QgsCoordinateTransform
+from qgis.core import Qgis, QgsSettings, QgsProject, QgsMessageLog, QgsWkbTypes, QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsGeometry, QgsCoordinateTransform, QgsPointXY
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 from qgis.gui import QgsMapToolEmitPoint
+from pyproj import Transformer
 import requests
 
 # Import the code for the dialog
@@ -207,6 +208,9 @@ class ExtensionAlexis:
         self.pointTool.canvasClicked.connect(self.displayPoint)
         self.canvas.setMapTool(self.pointTool)
 
+        
+        
+
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
@@ -249,3 +253,37 @@ class ExtensionAlexis:
                     self.dlg.adresse.setText("adresse introuvable")    
             else:
                 self.dlg.adresse.setText("introuvable")
+        
+        #recuperer la couche selectionne
+        nb_metres = self.dlg.metres.text()
+        
+        try:
+            nb_metres = int(nb_metres)
+            if nb_metres <= 0:
+                raise ValueError
+        except ValueError:
+            self.iface.messageBar().pushMessage("Error", f"{nb_metres} n'es pas un entier", level=Qgis.Critical)
+            return
+
+        couche_selec = self.dlg.listeDesLayers.currentText()
+        current_layer = QgsProject.instance().mapLayersByName(couche_selec)
+        target_layer = current_layer[0]
+
+        #création de la zone tampon
+        crs_source = QgsCoordinateReferenceSystem("EPSG:4326")
+        crs_cible = QgsCoordinateReferenceSystem("EPSG:2154")
+        transformation = QgsCoordinateTransform(crs_source, crs_cible, QgsProject.instance())
+        
+        former_point = QgsPointXY(coord.x(), coord.y())
+        new_point_lambert93 = transformation.transform(former_point)
+
+        point_clique = QgsGeometry.fromPointXY(new_point_lambert93)
+        buffer = point_clique.buffer(int(nb_metres), 30)       
+
+        compteur = 0
+        for feature in target_layer.getFeatures():
+            mageom = feature.geometry()
+            mageom.transform(transformation)
+            if buffer.intersects(mageom):
+                compteur += 1
+        self.dlg.objets.setText(str(compteur))        
